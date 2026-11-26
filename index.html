@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noel Night</title>
+<style>
+/* Layout idea: one centred column on a night sky. Single theme on purpose. */
+:root {
+  color-scheme: dark;
+  --night: #0c1a2b;
+  --box: #13273d;
+  --berry: #c8324a;
+  --gold: #f2c66d;
+  --snow: #f4f7fb;
+  --mist: #a9b9cc;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 40px 16px;
+  background: var(--night);
+  color: var(--snow);
+  font-family: Georgia, "Times New Roman", serif;
+  text-align: center;
+  overflow-x: hidden;
+}
+h1 { font-size: 3rem; margin: 0 0 8px; color: var(--gold); }
+p { color: var(--mist); margin: 0 0 24px; }
+.tree { font-size: 7rem; line-height: 1; margin: 16px 0; }
+.count { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+.count div { background: var(--box); border-radius: 10px; padding: 12px; width: 80px; }
+.count b { display: block; font-size: 2rem; color: var(--gold); font-variant-numeric: tabular-nums; }
+.count span { font-size: .8rem; color: var(--mist); }
+button {
+  font: inherit; font-size: 1.05rem; color: var(--snow); background: var(--berry);
+  border: 0; border-radius: 999px; padding: 12px 26px; cursor: pointer;
+}
+button:hover { filter: brightness(1.15); }
+button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+#wish { min-height: 1.6em; margin-top: 20px; font-size: 1.3rem; color: var(--snow); }
+.flake {
+  position: fixed; top: -20px; color: var(--snow); pointer-events: none;
+  animation: fall linear forwards;
+}
+@keyframes fall { to { transform: translateY(110vh); } }
+@media (prefers-reduced-motion: reduce) { .flake { display: none; } }
+</style>
+</head>
+<body>
+
+<h1>Merry Christmas</h1>
+<p>Joyeux Noël! Christmas arrives in</p>
+
+<div class="count">
+  <div><b id="days">0</b><span>Days</span></div>
+  <div><b id="hours">0</b><span>Hours</span></div>
+  <div><b id="minutes">0</b><span>Minutes</span></div>
+  <div><b id="seconds">0</b><span>Seconds</span></div>
+</div>
+
+<div class="tree" aria-hidden="true">🎄</div>
+
+<button id="btn" type="button">Show a Christmas wish</button>
+<div id="wish" role="status"></div>
+
+<script>
+// ----- Countdown to 25 December -----
+function updateCountdown() {
+  var now = new Date();
+  var christmas = new Date(now.getFullYear(), 11, 25);
+  if (now > christmas) christmas = new Date(now.getFullYear() + 1, 11, 25);
+
+  var total = Math.floor((christmas - now) / 1000);
+  document.getElementById('days').textContent = Math.floor(total / 86400);
+  document.getElementById('hours').textContent = Math.floor(total % 86400 / 3600);
+  document.getElementById('minutes').textContent = Math.floor(total % 3600 / 60);
+  document.getElementById('seconds').textContent = total % 60;
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ----- Button: show a random wish -----
+var wishes = [
+  'Peace, love and joy to you!',
+  'May your days be merry and bright.',
+  'Warm wishes for a cosy Christmas.',
+  'Happy holidays to you and your family!'
+];
+document.getElementById('btn').addEventListener('click', function () {
+  var i = Math.floor(Math.random() * wishes.length);
+  document.getElementById('wish').textContent = wishes[i];
+});
+
+// ----- Falling snow -----
+function makeSnowflake() {
+  var flake = document.createElement('div');
+  flake.className = 'flake';
+  flake.textContent = '❄';
+  flake.style.left = Math.random() * 100 + 'vw';
+  flake.style.fontSize = 10 + Math.random() * 16 + 'px';
+  flake.style.animationDuration = 5 + Math.random() * 6 + 's';
+  document.body.appendChild(flake);
+  setTimeout(function () { flake.remove(); }, 11000);
+}
+setInterval(makeSnowflake, 250);
+</script>
+
+</body>
+</html>
